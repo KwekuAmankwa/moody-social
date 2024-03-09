@@ -144,7 +144,8 @@ async function addPostToDB(postBody, user) {
         const docRef = await addDoc(collection(db, "posts"), {
             body: postBody,
             uid: user.uid,
-            createdAt: serverTimestamp()
+            createdAt: serverTimestamp(),
+            mood: moodState
         })
         console.log("Document written with ID: ", docRef.id)
     } catch (error) {
@@ -158,9 +159,10 @@ async function addPostToDB(postBody, user) {
 function postButtonPressed() {
     const postBody = textareaEl.value
     const user = auth.currentUser
-    if (postBody) {
+    if (postBody && moodState) {
         addPostToDB(postBody, user)
         clearField(textareaEl)
+        resetAllMoodElements(moodEmojiEls)
     }
 }
 
