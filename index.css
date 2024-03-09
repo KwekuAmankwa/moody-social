@@ -88,7 +88,7 @@ nav {
 .app-container {
     display: flex;
     flex-direction: column;
-    gap: 3em;
+    gap: 2em;
 }
 
 
@@ -112,9 +112,20 @@ nav {
     font-size: 1.2em;
 }
 
+
+/* === Post Section === */
+
+.post-section {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+}
+
+
+
 /* === Common for elements === */
 
-input, button {
+input, button, textarea {
     font-family: inherit;
     padding: var(--element-padding);
     border-radius: var(--element-border-radius);
@@ -125,11 +136,39 @@ input, button {
     border: var(--border-width) solid var(--dark-color);
 }
 
-input:focus, button:focus {
+input, button {
+    font-size: 1.1em;
+    text-align: center;
+    border: var(--border-width) solid var(--dark-color);
+}
+input:focus, button:focus, textarea:focus {
     outline: none;
 }
 
 /* === Input fields === */
+
+
+textarea {
+    font-size: 1em;
+    border: 0;
+    box-shadow: 3px 3px 3px 1px rgba(0, 0, 0, .25);
+    resize: none;
+    height: 6em;
+}
+
+textarea::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+    color: var(--grey-color);
+    opacity: 1; /* Firefox */
+}
+
+textarea:-ms-input-placeholder { /* Internet Explorer 10-11 */
+    color: var(--grey-color);
+}
+
+textarea::-ms-input-placeholder { /* Microsoft Edge */
+    color: var(--grey-color);
+}
+
 
 input {
     font-weight: 300;
