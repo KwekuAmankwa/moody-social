@@ -6,9 +6,9 @@ import { getAuth,
     onAuthStateChanged,
     GoogleAuthProvider,
     signInWithPopup,
-    updateProfile,
     signOut } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
 
+    import { getFirestore } from 'https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js'
 
 const firebaseConfig = {
   apiKey: "AIzaSyBufCkAZ9ih2qg-bNLLHASCBSUbTQqZ7f0",
@@ -23,6 +23,9 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app)
 const provider = new GoogleAuthProvider()
+const db = getFirestore(app)
+
+
 
 
 const viewLoggedOut = document.getElementById("logged-out-view")
