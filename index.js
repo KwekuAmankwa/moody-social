@@ -8,7 +8,7 @@ import { getAuth,
     signInWithPopup,
     signOut } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
 
-    import { getFirestore, collection, addDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js'
+import { getFirestore, collection, addDoc, getDocs, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js'
 
 const firebaseConfig = {
   apiKey: "AIzaSyBufCkAZ9ih2qg-bNLLHASCBSUbTQqZ7f0",
@@ -48,6 +48,9 @@ const moodEmojiEls = document.getElementsByClassName("mood-emoji-btn")
 const textareaEl = document.getElementById("post-input")
 const postButtonEl = document.getElementById("post-btn")
 
+const fetchPostsButtonEl = document.getElementById("fetch-posts-btn")
+
+const postsEl = document.getElementById("posts")
 
 /* == UI - Event Listeners == */
 
@@ -63,6 +66,8 @@ for (let moodEmojiEl of moodEmojiEls) {
 }
 
 postButtonEl.addEventListener("click", postButtonPressed)
+
+fetchPostsButtonEl.addEventListener("click", fetchOnceAndRenderPostsFromDB)
 
 /* === State === */
 
@@ -154,7 +159,32 @@ async function addPostToDB(postBody, user) {
 
 }
 
+async function fetchOnceAndRenderPostsFromDB() {
+    const querySnapshot = await getDocs(collection(db, "posts"))
+        querySnapshot.forEach((doc) => {
+            const postData = doc.data()
+            renderPost(postsEl, postData)
+        })
+}
+
+
+
 /* == Functions - UI Functions == */
+
+function renderPost(postsEl, postData) {
+    console.log(postData)
+    postsEl.innerHTML += `
+        <div class="post">
+            <div class="header">
+                <h3> ${displayDate(postData.createdAt)} </h3>
+                <img src="assets/emojis/${postData.mood}.png">
+            </div>
+            <p>
+                ${postData.body}
+            </p>
+        </div>
+    `
+}
 
 function postButtonPressed() {
     const postBody = textareaEl.value
@@ -214,6 +244,24 @@ function showUserGreeting(element, user){
         }
     }
 }
+
+function displayDate(firebaseDate) {
+    const date = firebaseDate.toDate()
+    
+    const day = date.getDate()
+    const year = date.getFullYear()
+    
+    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+    const month = monthNames[date.getMonth()]
+
+    let hours = date.getHours()
+    let minutes = date.getMinutes()
+    hours = hours < 10 ? "0" + hours : hours
+    minutes = minutes < 10 ? "0" + minutes : minutes
+
+    return `${day} ${month} ${year} - ${hours}:${minutes}`
+}
+
 
 /* = Functions - UI Functions - Mood = */
 
