@@ -8,7 +8,7 @@ import { getAuth,
     signInWithPopup,
     signOut } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
 
-    import { getFirestore } from 'https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js'
+    import { getFirestore, collection, addDoc } from 'https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js'
 
 const firebaseConfig = {
   apiKey: "AIzaSyBufCkAZ9ih2qg-bNLLHASCBSUbTQqZ7f0",
@@ -44,6 +44,9 @@ const signOutButtonEl = document.getElementById("sign-out-btn")
 const userProfilePictureEl = document.getElementById("user-profile-picture")
 const userGreetingEL = document.getElementById("user-greeting")
 
+const textareaEl = document.getElementById("post-input")
+const postButtonEl = document.getElementById("post-btn")
+
 
 /* == UI - Event Listeners == */
 
@@ -53,6 +56,8 @@ signInButtonEl.addEventListener("click", authSignInWithEmail)
 createAccountButtonEl.addEventListener("click", authCreateAccountWithEmail)
 
 signOutButtonEl.addEventListener("click", authSignOut)
+
+postButtonEl.addEventListener("click", postButtonPressed)
 
 
 /* === Main Code === */
@@ -123,7 +128,31 @@ function authSignOut(){
 }
 
 
+// Functions for Firestore
+
+async function addPostToDB(postBody, user) {
+    try {
+        const docRef = await addDoc(collection(db, "posts"), {
+            body: postBody,
+            uid: user
+        })
+        console.log("Document written with ID: ", docRef.id)
+    } catch (error) {
+        console.error(error.message)
+    }
+
+}
+
 /* == Functions - UI Functions == */
+
+function postButtonPressed() {
+    const postBody = textareaEl.value
+    const user = auth.currentUser
+    if (postBody) {
+        addPostToDB(postBody, user)
+        clearField(textareaEl)
+    }
+}
 
 function showLoggedOutView() {
     hideView(viewLoggedIn)
