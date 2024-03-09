@@ -38,11 +38,11 @@ body {
 
 /* === Typography === */
 
-h1, h2 {
+h1, h2, h3, p {
     margin: 0;
 }
 
-h2 {
+h2, h3 {
     font-weight: 500;
 }
 
@@ -88,7 +88,7 @@ nav {
 .app-container {
     display: flex;
     flex-direction: column;
-    gap: 2em;
+    gap: 1em;
 }
 
 
@@ -155,6 +155,44 @@ nav {
 .unselected-emoji {
     transform: scale(1);
     opacity: 0.5;
+}
+
+/* === Posts Section === */
+
+.posts-section {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+	margin-bottom: 1.8em;
+}
+
+.post {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--secondary-color);
+    padding: 0.8em;
+    border-radius: var(--element-border-radius);
+    gap: 0.4em;
+}
+
+.post .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.post .header h3 {
+    font-size: 1em;
+}
+
+.post .header img {
+    width: 2em;
+    height: 2em;
+}
+
+.post p {
+    font-size: 0.9em;
+    line-height: 1.3em;
 }
 
 /* === Common for elements === */
