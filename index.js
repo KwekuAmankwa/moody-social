@@ -41,9 +41,6 @@ const signOutButtonEl = document.getElementById("sign-out-btn")
 const userProfilePictureEl = document.getElementById("user-profile-picture")
 const userGreetingEL = document.getElementById("user-greeting")
 
-const displayNameInputEl = document.getElementById("display-name-input")
-const photoURLInputEl = document.getElementById("photo-url-input")
-const updateProfileButtonEl = document.getElementById("update-profile-btn")
 
 /* == UI - Event Listeners == */
 
@@ -54,7 +51,6 @@ createAccountButtonEl.addEventListener("click", authCreateAccountWithEmail)
 
 signOutButtonEl.addEventListener("click", authSignOut)
 
-updateProfileButtonEl.addEventListener("click", authUpdateProfile)
 
 /* === Main Code === */
 
@@ -123,19 +119,6 @@ function authSignOut(){
     })
 }
 
-function authUpdateProfile(){
-    const newDisplayName = displayNameInputEl.value
-    const newPhotoURL = photoURLInputEl.value
-    updateProfile(auth.currentUser, {
-        displayName: newDisplayName, photoURL: newPhotoURL
-        }).then(() => {
-            console.log("Profile updated!")
-            
-        }).catch((error) => {
-            console.error(error.message)
-        }
-    )
-}
 
 /* == Functions - UI Functions == */
 
