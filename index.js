@@ -183,10 +183,14 @@ function renderPost(postsEl, postData) {
                 <img src="assets/emojis/${postData.mood}.png">
             </div>
             <p>
-                ${postData.body}
+                ${replaceNewlinesWithBrTags(postData.body)}
             </p>
         </div>
     `
+}
+
+function replaceNewlinesWithBrTags(inputString) {
+   return inputString.replace(/\n/g,"<br>")
 }
 
 function postButtonPressed() {
