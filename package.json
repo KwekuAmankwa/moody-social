@@ -1,0 +1,14 @@
+{
+  "name": "moody",
+  "version": "1.0.0",
+  "description": "mock social media app",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm config set default-test \"jest\""
+  },
+  "author": "Kweku Amankwa",
+  "license": "ISC",
+  "dependencies": {
+    "firebase": "^10.8.1"
+  }
+}
