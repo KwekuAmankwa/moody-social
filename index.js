@@ -161,10 +161,13 @@ async function addPostToDB(postBody, user) {
 
 async function fetchOnceAndRenderPostsFromDB() {
     const querySnapshot = await getDocs(collection(db, "posts"))
-        querySnapshot.forEach((doc) => {
-            const postData = doc.data()
-            renderPost(postsEl, postData)
-        })
+
+    clearAll(postsEl)
+
+    querySnapshot.forEach((doc) => {
+        const postData = doc.data()
+        renderPost(postsEl, postData)
+    })
 }
 
 
@@ -216,6 +219,10 @@ function hideView(view) {
 
 function clearField(field){
     field.value = ""
+}
+
+function clearAll(element) {
+    element.innerHTML = ""
 }
 
 function clearAuthFields(){
