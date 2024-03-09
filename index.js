@@ -8,7 +8,7 @@ import { getAuth,
     signInWithPopup,
     signOut } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
 
-    import { getFirestore, collection, addDoc } from 'https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js'
+    import { getFirestore, collection, addDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js'
 
 const firebaseConfig = {
   apiKey: "AIzaSyBufCkAZ9ih2qg-bNLLHASCBSUbTQqZ7f0",
@@ -134,7 +134,8 @@ async function addPostToDB(postBody, user) {
     try {
         const docRef = await addDoc(collection(db, "posts"), {
             body: postBody,
-            uid: user
+            uid: user.uid,
+            createdAt: serverTimestamp()
         })
         console.log("Document written with ID: ", docRef.id)
     } catch (error) {
