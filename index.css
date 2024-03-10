@@ -228,6 +228,13 @@ nav {
 
 /* = Posts Section - Posts - Footer = */
 
+.post .footer {
+    display: flex;
+    /* flex-direction: row-reverse; */
+    align-self: flex-end;
+    gap: 0.4em;
+}
+
 .post .footer button {
     font-size: 0.9em;
     padding: 0.2em 0.8em;
@@ -242,6 +249,10 @@ nav {
 
 .post .footer .edit-color {
     background-color: var(--post-color);
+}
+
+.post .footer .delete-color {
+    background-color: var(--delete-color);
 }
 
 /* === Common for elements === */
