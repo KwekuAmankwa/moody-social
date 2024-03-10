@@ -278,19 +278,52 @@ function postButtonPressed() {
     }
 }
 
-function renderPost(postsEl, postData) {
-    postsEl.innerHTML += `
-        <div class="post">
-            <div class="header">
-                <h3> ${displayDate(postData.createdAt)} </h3>
-                <img src="assets/emojis/${postData.mood}.png">
-            </div>
-            <p>
-                ${replaceNewlinesWithBrTags(postData.body)}
-            </p>
+
+function createPostHeader(postData) {
+    /*
+        <div class="header">
         </div>
-    `
+    */
+    const headerDiv = document.createElement("div")
+    headerDiv.className = "header"
+    
+        /* 
+            <h3>21 Sep 2023 - 14:35</h3>
+        */
+        const headerDate = document.createElement("h3")
+        headerDate.textContent = displayDate(postData.createdAt)
+        headerDiv.appendChild(headerDate)
+        
+        /* 
+            <img src="assets/emojis/5.png">
+        */
+        const moodImage = document.createElement("img")
+        moodImage.src = `assets/emojis/${postData.mood}.png`
+        headerDiv.appendChild(moodImage)
+        
+    return headerDiv
 }
+
+function createPostBody(postData) {
+    /*
+        <p>This is a post</p>
+    */
+    const postBody = document.createElement("p")
+    postBody.innerHTML = replaceNewlinesWithBrTags(postData.body)
+    
+    return postBody
+}
+
+function renderPost(postsEl, postData) {
+    const postDiv = document.createElement("div")
+    postDiv.className = "post"
+    
+    postDiv.appendChild(createPostHeader(postData))
+    postDiv.appendChild(createPostBody(postData))
+    
+    postsEl.appendChild(postDiv)
+}
+
 
 function replaceNewlinesWithBrTags(inputString) {
    return inputString.replace(/\n/g,"<br>")
