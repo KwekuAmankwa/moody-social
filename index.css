@@ -184,11 +184,6 @@ nav {
     background-color: var(--dark-color);
 }
 
-/* .unselected-filter {
-    color: var(--dark-color);
-    background-color: var(--white-color);
-} */
-
 /* === Posts Section Posts === */
 
 .posts-section {
@@ -207,6 +202,8 @@ nav {
     gap: 0.4em;
 }
 
+/* = Posts Section - Posts - Header = */
+
 .post .header {
     display: flex;
     justify-content: space-between;
@@ -222,9 +219,29 @@ nav {
     height: 2em;
 }
 
+/* = Posts Section - Posts - Body = */
+
 .post p {
     font-size: 0.9em;
     line-height: 1.3em;
+}
+
+/* = Posts Section - Posts - Footer = */
+
+.post .footer button {
+    font-size: 0.9em;
+    padding: 0.2em 0.8em;
+    box-shadow: 0px var(--small-button-height) 0px 0px var(--dark-color);
+    position: relative;
+}
+
+.post .footer button:hover {
+    top: var(--small-button-height);
+    box-shadow: none;
+}
+
+.post .footer .edit-color {
+    background-color: var(--post-color);
 }
 
 /* === Common for elements === */
