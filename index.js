@@ -10,8 +10,10 @@ import { getAuth,
 } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
 
 import { getFirestore, 
-    collection, 
+    collection,
+    doc, 
     addDoc, 
+    updateDoc,
     serverTimestamp,
     onSnapshot,
     query,
@@ -185,13 +187,20 @@ async function addPostToDB(postBody, user) {
 }
 
 
+async function updatePostInDB(docId, newBody) {
+    const postRef = doc(db, collectionName, docId)
+    await updateDoc(postRef, {
+        body: newBody
+    })
+
+}
+
 function fetchInRealtimeAndRenderPostsFromDB(query,user) {
     onSnapshot(query, (querySnapshot) => {
 
         clearAll(postsEl)
         querySnapshot.forEach((doc) => {
-            const postData = doc.data()
-            renderPost(postsEl, postData)
+            renderPost(postsEl, doc)
         })
 
     })
@@ -314,12 +323,51 @@ function createPostBody(postData) {
     return postBody
 }
 
-function renderPost(postsEl, postData) {
+function createPostUpdateButton(wholeDoc) {
+    const postId = wholeDoc.id
+    const postData = wholeDoc.data()
+    
+    /* 
+        <button class="edit-color">Edit</button>
+    */
+    const button = document.createElement("button")
+    button.textContent = "Edit"
+    button.classList.add("edit-color")
+    button.addEventListener("click", function() {
+        const newBody = prompt("Edit the post", postData.body)
+        
+        if (newBody) {
+            console.log(newBody)
+            updatePostInDB(postId, newBody)
+        }
+    })
+    
+    return button
+}
+
+function createPostFooter(wholeDoc) {
+    /* 
+        <div class="footer">
+            <button>Edit</button>
+        </div>
+    */
+    const footerDiv = document.createElement("div")
+    footerDiv.className = "footer"
+    
+    footerDiv.appendChild(createPostUpdateButton(wholeDoc))
+    
+    return footerDiv
+}
+
+function renderPost(postsEl, wholeDoc) {
+    const postData = wholeDoc.data()
+    
     const postDiv = document.createElement("div")
     postDiv.className = "post"
     
     postDiv.appendChild(createPostHeader(postData))
     postDiv.appendChild(createPostBody(postData))
+    postDiv.appendChild(createPostFooter(wholeDoc))
     
     postsEl.appendChild(postDiv)
 }
