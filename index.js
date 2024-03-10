@@ -190,7 +190,8 @@ async function addPostToDB(postBody, user) {
 async function updatePostInDB(docId, newBody) {
     const postRef = doc(db, collectionName, docId)
     await updateDoc(postRef, {
-        body: newBody
+        body: newBody,
+        createdAt: serverTimestamp()
     })
 
 }
