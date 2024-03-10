@@ -6,9 +6,19 @@ import { getAuth,
     onAuthStateChanged,
     GoogleAuthProvider,
     signInWithPopup,
-    signOut } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+    signOut 
+} from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
 
-import { getFirestore, collection, addDoc, getDocs, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js'
+import { getFirestore, 
+    collection, 
+    addDoc, 
+    serverTimestamp,
+    onSnapshot,
+    query,
+    where,
+    orderBy 
+} from 'https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js'
+
 
 const firebaseConfig = {
   apiKey: "AIzaSyBufCkAZ9ih2qg-bNLLHASCBSUbTQqZ7f0",
@@ -48,7 +58,7 @@ const moodEmojiEls = document.getElementsByClassName("mood-emoji-btn")
 const textareaEl = document.getElementById("post-input")
 const postButtonEl = document.getElementById("post-btn")
 
-const fetchPostsButtonEl = document.getElementById("fetch-posts-btn")
+// const fetchPostsButtonEl = document.getElementById("fetch-posts-btn")
 
 const postsEl = document.getElementById("posts")
 
@@ -67,11 +77,16 @@ for (let moodEmojiEl of moodEmojiEls) {
 
 postButtonEl.addEventListener("click", postButtonPressed)
 
-fetchPostsButtonEl.addEventListener("click", fetchOnceAndRenderPostsFromDB)
+// fetchPostsButtonEl.addEventListener("click", fetchOnceAndRenderPostsFromDB)
 
 /* === State === */
 
 let moodState = 0
+
+/* === Global Constants === */
+
+const collectionName = "posts"
+
 
 
 /* === Main Code === */
@@ -82,6 +97,7 @@ function authState() {
             showProfilePicture(userProfilePictureEl, user)
             showUserGreeting(userGreetingEL, user)
             showLoggedInView()
+            fetchInRealtimeAndRenderPostsFromDB(user)
         } else {
             showLoggedOutView()
         }
@@ -146,7 +162,7 @@ function authSignOut(){
 
 async function addPostToDB(postBody, user) {
     try {
-        const docRef = await addDoc(collection(db, "posts"), {
+        const docRef = await addDoc(collection(db, collectionName), {
             body: postBody,
             uid: user.uid,
             createdAt: serverTimestamp(),
@@ -159,23 +175,49 @@ async function addPostToDB(postBody, user) {
 
 }
 
-async function fetchOnceAndRenderPostsFromDB() {
-    const querySnapshot = await getDocs(collection(db, "posts"))
 
-    clearAll(postsEl)
+function fetchInRealtimeAndRenderPostsFromDB(user) {
+    const postsRef = collection(db, collectionName)
+    const q = query(postsRef, where("uid", "==", user.uid), orderBy("createdAt", "desc"))
+    onSnapshot(q, (querySnapshot) => {
 
-    querySnapshot.forEach((doc) => {
-        const postData = doc.data()
-        renderPost(postsEl, postData)
+        clearAll(postsEl)
+        querySnapshot.forEach((doc) => {
+            const postData = doc.data()
+            renderPost(postsEl, postData)
+        })
+
     })
 }
+
+// async function fetchOnceAndRenderPostsFromDB() {
+//     const querySnapshot = await getDocs(collection(db, "posts"))
+
+//     clearAll(postsEl)
+
+//     querySnapshot.forEach((doc) => {
+//         const postData = doc.data()
+//         renderPost(postsEl, postData)
+//     })
+// }
+
+
 
 
 
 /* == Functions - UI Functions == */
 
+function postButtonPressed() {
+    const postBody = textareaEl.value
+    const user = auth.currentUser
+    if (postBody && moodState) {
+        addPostToDB(postBody, user)
+        clearField(textareaEl)
+        resetAllMoodElements(moodEmojiEls)
+    }
+}
+
 function renderPost(postsEl, postData) {
-    console.log(postData)
     postsEl.innerHTML += `
         <div class="post">
             <div class="header">
@@ -193,15 +235,6 @@ function replaceNewlinesWithBrTags(inputString) {
    return inputString.replace(/\n/g,"<br>")
 }
 
-function postButtonPressed() {
-    const postBody = textareaEl.value
-    const user = auth.currentUser
-    if (postBody && moodState) {
-        addPostToDB(postBody, user)
-        clearField(textareaEl)
-        resetAllMoodElements(moodEmojiEls)
-    }
-}
 
 function showLoggedOutView() {
     hideView(viewLoggedIn)
@@ -257,6 +290,9 @@ function showUserGreeting(element, user){
 }
 
 function displayDate(firebaseDate) {
+    if (!firebaseDate) {
+        return "Date processing"
+    }
     const date = firebaseDate.toDate()
     
     const day = date.getDate()
